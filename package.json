@@ -12,6 +12,7 @@
     "@types/react": "^16.9.44",
     "@types/react-dom": "^16.9.8",
     "bootstrap": "^4.5.0",
+    "elliptic": "^6.5.3",
     "jquery": "^3.5.1",
     "popper.js": "^1.16.1",
     "react": "^16.13.1",
@@ -19,7 +20,8 @@
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
     "sass": "^1.26.10",
-    "typescript": "^3.9.7"
+    "typescript": "^3.9.7",
+    "websocket-extensions": "^0.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
