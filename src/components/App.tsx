@@ -20,7 +20,7 @@ export default class App extends React.Component<{}, State> {
       .fill(null)
       .map(() => ({
         guess: Array(4).fill(null),
-        response: Array(2).fill(null),
+        response: Array(4).fill(null),
       })),
     code: ['red', 'yellow', 'orange', 'blue'],
     codeHidden: true,

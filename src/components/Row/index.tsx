@@ -1,7 +1,6 @@
 import React from 'react'
 import CodePeg from 'components/CodePeg'
 import KeyPeg from 'components/KeyPeg'
-import padArrayEnd from 'utilities/padArrayEnd'
 import styles from './Row.module.sass'
 
 interface Props {
@@ -21,12 +20,13 @@ export default function Row(props: Props) {
             key={pegNum}
             clickable={props.active}
             onClick={() => props.onPegClick(pegNum)}
+            hidden={false}
           />
         ))}
       </div>
       <div className={styles.keyPegsContainer}>
-        {padArrayEnd(props.response, 4, 0).map((color: string, key: number) => (
-          <KeyPeg color={color} key={key} />
+        {props.response.map((color: string, key: number) => (
+          <KeyPeg color={color} key={key} hidden={false} />
         ))}
       </div>
     </div>

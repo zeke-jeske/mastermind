@@ -2,9 +2,26 @@ import React from 'react'
 import Row from 'components/Row'
 import Code from 'components/Code'
 
-export default function Board(props) {
-  const { rows, activeRow, code, codeHidden, onPegClick } = props
+interface Row {
+  guess: string[]
+  response: string[]
+}
 
+interface Props {
+  rows: Array<Row>
+  activeRow: number
+  code: string[]
+  codeHidden: boolean
+  onPegClick: (rowNum: number, pegNum: number) => void
+}
+
+export default function Board({
+  rows,
+  activeRow,
+  code,
+  codeHidden,
+  onPegClick,
+}: Props) {
   return (
     <div
       style={{
@@ -20,7 +37,7 @@ export default function Board(props) {
           padding: '.5rem 1.5rem',
         }}
       >
-        {rows.map((row, key) => {
+        {rows.map((row: Row, key: number) => {
           return (
             <Row
               {...row}
