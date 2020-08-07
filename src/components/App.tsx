@@ -10,7 +10,7 @@ interface State {
     response: string[]
   }>
   code: string[]
-  codeVisible: boolean
+  codeHidden: boolean
   activeRow: number
 }
 
@@ -23,7 +23,7 @@ export default class App extends React.Component<{}, State> {
         response: Array(2).fill(null),
       })),
     code: ['red', 'yellow', 'orange', 'blue'],
-    codeVisible: false,
+    codeHidden: true,
     activeRow: 9,
   }
 
@@ -54,7 +54,8 @@ export default class App extends React.Component<{}, State> {
       >
         <Board
           rows={this.state.rows}
-          code={this.state.codeVisible && this.state.code}
+          code={this.state.code}
+          codeHidden={this.state.codeHidden}
           activeRow={this.state.activeRow}
           onPegClick={this.switchPegColor}
         />

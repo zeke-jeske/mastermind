@@ -3,7 +3,7 @@ import Row from 'components/Row'
 import Code from 'components/Code'
 
 export default function Board(props) {
-  const { rows, activeRow, code, codeVisible, onPegClick } = props
+  const { rows, activeRow, code, codeHidden, onPegClick } = props
 
   return (
     <div
@@ -14,7 +14,7 @@ export default function Board(props) {
         margin: '1rem',
       }}
     >
-      <Code code={code} hidden={!codeVisible} />
+      <Code code={code} hidden={codeHidden} />
       <div
         style={{
           padding: '.5rem 1.5rem',
