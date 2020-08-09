@@ -1,6 +1,7 @@
 import React from 'react'
 import Board from 'components/Board'
 import Button from 'react-bootstrap/Button'
+import Modal from 'react-bootstrap/Modal'
 
 const codePegColors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple']
 const keyPegColors = ['red', 'white']
@@ -11,25 +12,17 @@ interface State {
     response: string[]
   }>
   code: string[]
-  codeHidden: boolean
   activeRow: number
-  gameDone: boolean
+  gameOver: boolean
   playerWon: boolean
+  showModal: boolean
 }
 
 export default class App extends React.Component<{}, State> {
-  state = {
-    rows: Array(10)
-      .fill(null)
-      .map(() => ({
-        guess: Array(4).fill(''),
-        response: Array(4).fill(''),
-      })),
-    code: generateCode(),
-    codeHidden: true,
-    activeRow: 9,
-    gameDone: false,
-    playerWon: false,
+  constructor(props: {}) {
+    super(props)
+
+    this.state = this.generateNewGameState()
   }
 
   switchPegColor = (rowNum: number, pegNum: number) => {
@@ -71,11 +64,8 @@ export default class App extends React.Component<{}, State> {
       })
 
       // if the player won
-      if (response.length === 4) {
-        newState.gameDone = true
-        newState.codeHidden = false
-        newState.playerWon = true
-      } else {
+      if (response.length === 4) this.endGame(true)
+      else {
         guess.forEach((color, pegNum) => {
           // correct color, wrong place
           if (color !== '' && code.includes(color)) {
@@ -89,10 +79,7 @@ export default class App extends React.Component<{}, State> {
         newState.activeRow = activeRow - 1
 
         // player already made 10 guesses
-        if (!activeRow) {
-          newState.gameDone = true
-          newState.codeHidden = false
-        }
+        if (!activeRow) this.endGame(false)
       }
 
       newState.rows = [...rows]
@@ -106,32 +93,102 @@ export default class App extends React.Component<{}, State> {
     })
   }
 
-  render() {
+  endGame = (playerWon: boolean) => {
+    this.setState({
+      gameOver: true,
+      playerWon,
+      showModal: true,
+    })
+  }
+
+  generateNewGameState = () => {
+    return {
+      rows: Array(10)
+        .fill(null)
+        .map(() => ({
+          guess: Array(4).fill(''),
+          response: Array(4).fill(''),
+        })),
+      code: generateCode(),
+      activeRow: 9,
+      gameOver: false,
+      playerWon: false,
+      showModal: false,
+    }
+  }
+
+  newGame = () => {
+    this.setState(this.generateNewGameState())
+  }
+
+  closeModal = () => {
+    this.setState({
+      showModal: false,
+      activeRow: -1, // Make sure none of the pegs are still clickable
+    })
+  }
+
+  render = () => {
+    const { rows, code, gameOver, activeRow, showModal, playerWon } = this.state
+
     return (
       <div
         className='d-flex justify-content-center align-items-center bg-dark text-light'
         style={{ minHeight: '100vh' }}
       >
         <Board
-          rows={this.state.rows}
-          code={this.state.code}
-          codeHidden={this.state.codeHidden}
-          activeRow={this.state.activeRow}
+          rows={rows}
+          code={code}
+          codeHidden={!gameOver}
+          activeRow={activeRow}
           onPegClick={this.switchPegColor}
         />
-        <Button
-          variant='primary'
-          className='m-4'
-          style={{
-            position: 'fixed',
-            bottom: 0,
-            right: 0,
-          }}
-          onClick={this.check}
-          disabled={this.state.rows[this.state.activeRow].guess.includes('')}
-        >
-          Check
-        </Button>
+        {!gameOver && (
+          <Button
+            variant='primary'
+            className='m-4'
+            style={{
+              position: 'fixed',
+              bottom: 0,
+              right: 0,
+            }}
+            onClick={this.check}
+            disabled={rows[this.state.activeRow].guess.includes('')}
+          >
+            Check
+          </Button>
+        )}
+        {gameOver && !showModal && (
+          <Button
+            variant='primary'
+            className='m-4'
+            style={{
+              position: 'fixed',
+              bottom: 0,
+              right: 0,
+            }}
+            onClick={this.newGame}
+          >
+            New game
+          </Button>
+        )}
+        <Modal show={showModal} onHide={this.closeModal} centered>
+          <Modal.Header closeButton>
+            <Modal.Title>{playerWon ? 'You win!' : 'You lose.'}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {playerWon
+              ? 'Nice job! You guessed the code in only ' +
+                (10 - activeRow) +
+                (activeRow === 9 ? ' try.' : ' tries.')
+              : 'Better luck next time!'}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant='primary' onClick={this.newGame}>
+              New game
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     )
   }
