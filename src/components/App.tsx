@@ -1,7 +1,8 @@
 import React from 'react'
 import Board from 'components/Board'
 import GameEndModal from 'components/GameEndModal'
-import Button from 'react-bootstrap/Button'
+import CheckButton from 'components/CheckButton'
+import NewGameButton from 'components/NewGameButton'
 
 const codePegColors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple']
 const keyPegColors = ['red', 'white']
@@ -121,34 +122,9 @@ export default class App extends React.Component<{}, State> {
           onPegClick={this.switchPegColor}
         />
         {!gameOver && (
-          <Button
-            variant='primary'
-            className='m-4'
-            style={{
-              position: 'fixed',
-              bottom: 0,
-              right: 0,
-            }}
-            onClick={this.check}
-            disabled={rows[this.state.activeRow].guess.includes('empty')}
-          >
-            Check
-          </Button>
+          <CheckButton {...{ onClick: this.check, activeRow, rows }} />
         )}
-        {gameOver && !showModal && (
-          <Button
-            variant='primary'
-            className='m-4'
-            style={{
-              position: 'fixed',
-              bottom: 0,
-              right: 0,
-            }}
-            onClick={this.newGame}
-          >
-            New game
-          </Button>
-        )}
+        {gameOver && !showModal && <NewGameButton onClick={this.check} />}
         <GameEndModal
           playerWon={playerWon}
           show={showModal}
