@@ -1,3 +1,5 @@
+@import 'bootstrap/scss/bootstrap'
+
 .peg
   border-radius: 50%
   color: inherit
@@ -9,12 +11,35 @@
 
   &:focus
     outline: none
+    box-shadow: 0 0 0 1px white
 
   &:not(:disabled)
     cursor: pointer
 
-  &.border
+  &.empty
     border: 1px solid #fff
+    background: transparent
+
+  &.red
+    background: $red
+
+  &.orange
+    background: $orange
+
+  &.yellow
+    background: $yellow
+
+  &.green
+    background: $green
+
+  &.blue
+    background: $blue
+
+  &.purple
+    background: $purple
+
+  &.white
+    background: $white
 
   .questionMark
     margin: 0

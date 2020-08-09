@@ -22,43 +22,37 @@ export default class App extends React.Component<{}, State> {
   constructor(props: {}) {
     super(props)
 
-    this.state = this.generateNewGameState()
+    this.state = generateNewGameState()
   }
 
   switchPegColor = (rowNum: number, pegNum: number) => {
-    this.setState(prevState => {
-      // must copy each layer separately so as not to mutate prevState
-      let rows = [...prevState.rows]
-      let row = { ...rows[rowNum] }
-      let guess = [...row.guess]
+    this.setState(state => {
+      // must copy each layer separately so as not to mutate state
+      let rows = [...state.rows]
+      let guess = [...rows[rowNum].guess]
 
-      // indexOf returns -1 if color is not yet set, which becomes 0 (red)
-      const oldPegColorIndex = codePegColors.indexOf(guess[pegNum])
       guess[pegNum] =
-        codePegColors[(oldPegColorIndex + 1) % codePegColors.length]
+        codePegColors[(codePegColors.indexOf(guess[pegNum]) + 1) % 6]
 
-      row.guess = guess
-      rows[rowNum] = row
+      rows[rowNum] = { ...rows[rowNum], guess }
 
       return { rows }
     })
   }
 
   check = () => {
-    this.setState(state => {
-      const activeRow = state.activeRow
+    this.setState(({ activeRow, rows, code }) => {
       const newState: any = {}
-      const rows = state.rows
       const guess = [...rows[activeRow].guess]
-      const code = [...state.code]
+      const c = [...code] // copy code so that it is not modified
       let response: string[] = []
 
       guess.forEach((color, pegNum) => {
         // correct color and correct position
-        if (color === code[pegNum]) {
+        if (color === c[pegNum]) {
           // make sure it's not counted twice
           guess[pegNum] = ''
-          code[pegNum] = ''
+          c[pegNum] = ''
           response.push(keyPegColors[0])
         }
       })
@@ -68,18 +62,17 @@ export default class App extends React.Component<{}, State> {
       else {
         guess.forEach((color, pegNum) => {
           // correct color, wrong place
-          if (color !== '' && code.includes(color)) {
-            code[code.indexOf(color)] = ''
+          if (color && c.includes(color)) {
+            c[c.indexOf(color)] = ''
             response.push(keyPegColors[1])
           }
         })
 
-        response = response.concat(Array(4 - response.length).fill('')) // pad array to length 4
+        // pad array to length 4
+        response = response.concat(Array(4 - response.length).fill('empty'))
 
-        newState.activeRow = activeRow - 1
-
-        // player already made 10 guesses
         if (!activeRow) this.endGame(false)
+        else newState.activeRow = activeRow - 1
       }
 
       newState.rows = [...rows]
@@ -101,24 +94,8 @@ export default class App extends React.Component<{}, State> {
     })
   }
 
-  generateNewGameState = () => {
-    return {
-      rows: Array(10)
-        .fill(null)
-        .map(() => ({
-          guess: Array(4).fill(''),
-          response: Array(4).fill(''),
-        })),
-      code: generateCode(),
-      activeRow: 9,
-      gameOver: false,
-      playerWon: false,
-      showModal: false,
-    }
-  }
-
   newGame = () => {
-    this.setState(this.generateNewGameState())
+    this.setState(generateNewGameState())
   }
 
   closeModal = () => {
@@ -153,7 +130,7 @@ export default class App extends React.Component<{}, State> {
               right: 0,
             }}
             onClick={this.check}
-            disabled={rows[this.state.activeRow].guess.includes('')}
+            disabled={rows[this.state.activeRow].guess.includes('empty')}
           >
             Check
           </Button>
@@ -194,8 +171,22 @@ export default class App extends React.Component<{}, State> {
   }
 }
 
-function generateCode(): string[] {
-  return Array(4)
-    .fill('')
-    .map(() => codePegColors[Math.floor(Math.random() * codePegColors.length)])
+function generateNewGameState() {
+  return {
+    rows: Array(10)
+      .fill(null)
+      .map(() => ({
+        guess: Array(4).fill('empty'),
+        response: Array(4).fill('empty'),
+      })),
+    code: Array(4)
+      .fill('')
+      .map(
+        () => codePegColors[Math.floor(Math.random() * codePegColors.length)],
+      ),
+    activeRow: 9,
+    gameOver: false,
+    playerWon: false,
+    showModal: false,
+  }
 }

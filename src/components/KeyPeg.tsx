@@ -1,6 +1,7 @@
 import React from 'react'
 import Peg from 'components/Peg'
-import emptyFunction from 'utilities/emptyFunction'
+
+const emptyFunction = () => {}
 
 interface Props {
   hidden: boolean
@@ -10,7 +11,12 @@ interface Props {
 export default function KeyPeg(props: Props) {
   return (
     <Peg
-      {...{ ...props, size: 0.5, clickable: false, onClick: emptyFunction }}
+      {...{
+        ...props,
+        size: 0.5,
+        clickable: false,
+        onClick: emptyFunction,
+      }}
     />
   )
 }

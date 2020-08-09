@@ -18,14 +18,13 @@ export default function Peg({
 }: Props) {
   return (
     <button
-      className={[styles.peg, (hidden || !color) && styles.border]
+      className={[styles.peg, hidden ? styles.empty : styles[color]]
         .filter(a => a)
         .join(' ')}
       style={{
         height: size + 'rem',
         width: size + 'rem',
         margin: size / 3 + 'rem',
-        backgroundColor: (!hidden && color) || 'transparent',
       }}
       disabled={!clickable}
       onClick={onClick}

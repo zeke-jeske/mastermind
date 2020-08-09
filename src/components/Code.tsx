@@ -1,6 +1,7 @@
 import React from 'react'
 import CodePeg from 'components/CodePeg'
-import emptyFunction from 'utilities/emptyFunction'
+
+const emptyFunction = () => {}
 
 interface Props {
   code: string[]
@@ -18,14 +19,14 @@ export default function Code({ code, hidden }: Props) {
       }}
     >
       {code.map((color: string, key: number) => {
-        const codePegProps = {
+        const pegProps = {
           color,
           key,
           hidden,
           clickable: false,
           onClick: emptyFunction,
         }
-        return <CodePeg {...codePegProps} />
+        return <CodePeg {...pegProps} />
       })}
     </div>
   )
