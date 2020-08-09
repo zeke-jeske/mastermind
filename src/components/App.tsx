@@ -1,7 +1,7 @@
 import React from 'react'
 import Board from 'components/Board'
+import GameEndModal from 'components/GameEndModal'
 import Button from 'react-bootstrap/Button'
-import Modal from 'react-bootstrap/Modal'
 
 const codePegColors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple']
 const keyPegColors = ['red', 'white']
@@ -149,23 +149,13 @@ export default class App extends React.Component<{}, State> {
             New game
           </Button>
         )}
-        <Modal show={showModal} onHide={this.closeModal} centered>
-          <Modal.Header closeButton>
-            <Modal.Title>{playerWon ? 'You win!' : 'You lose.'}</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            {playerWon
-              ? 'Nice job! You guessed the code in only ' +
-                (10 - activeRow) +
-                (activeRow === 9 ? ' try.' : ' tries.')
-              : 'Better luck next time!'}
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant='primary' onClick={this.newGame}>
-              New game
-            </Button>
-          </Modal.Footer>
-        </Modal>
+        <GameEndModal
+          playerWon={playerWon}
+          show={showModal}
+          onHide={this.closeModal}
+          onNewGame={this.newGame}
+          activeRow={activeRow}
+        />
       </div>
     )
   }
