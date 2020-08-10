@@ -124,7 +124,7 @@ export default class App extends React.Component<{}, State> {
         {!gameOver && (
           <CheckButton {...{ onClick: this.check, activeRow, rows }} />
         )}
-        {gameOver && !showModal && <NewGameButton onClick={this.check} />}
+        {gameOver && !showModal && <NewGameButton onClick={this.newGame} />}
         <GameEndModal
           playerWon={playerWon}
           show={showModal}
