@@ -2,7 +2,7 @@ import React from 'react'
 import Peg from 'components/Peg'
 
 interface Props {
-  hidden: boolean
+  hidden?: boolean
   color: string
   clickable?: boolean
   onClick?: () => void

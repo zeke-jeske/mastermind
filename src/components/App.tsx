@@ -3,6 +3,8 @@ import Board from 'components/Board'
 import GameEndModal from 'components/GameEndModal'
 import CheckButton from 'components/CheckButton'
 import NewGameButton from 'components/NewGameButton'
+import RulesButton from 'components/RulesButton'
+import RulesModal from 'components/RulesModal'
 
 const codePegColors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple']
 const keyPegColors = ['red', 'white']
@@ -16,7 +18,8 @@ interface State {
   activeRow: number
   gameOver: boolean
   playerWon: boolean
-  showModal: boolean
+  showGameOverModal: boolean
+  showRulesModal: boolean
 }
 
 export default class App extends React.Component<{}, State> {
@@ -91,7 +94,7 @@ export default class App extends React.Component<{}, State> {
     this.setState({
       gameOver: true,
       playerWon,
-      showModal: true,
+      showGameOverModal: true,
     })
   }
 
@@ -99,15 +102,31 @@ export default class App extends React.Component<{}, State> {
     this.setState(generateNewGameState())
   }
 
-  closeModal = () => {
+  closeGameOverModal = () => {
     this.setState({
-      showModal: false,
+      showGameOverModal: false,
       activeRow: -1, // Make sure none of the pegs are still clickable
     })
   }
 
+  closeRulesModal = () => {
+    this.setState({ showRulesModal: false })
+  }
+
+  showRulesModal = () => {
+    this.setState({ showRulesModal: true })
+  }
+
   render = () => {
-    const { rows, code, gameOver, activeRow, showModal, playerWon } = this.state
+    const {
+      rows,
+      code,
+      gameOver,
+      activeRow,
+      showGameOverModal,
+      showRulesModal,
+      playerWon,
+    } = this.state
 
     return (
       <div
@@ -121,17 +140,21 @@ export default class App extends React.Component<{}, State> {
           activeRow={activeRow}
           onPegClick={this.switchPegColor}
         />
+        {!gameOver && <RulesButton onClick={this.showRulesModal} />}
         {!gameOver && (
           <CheckButton {...{ onClick: this.check, activeRow, rows }} />
         )}
-        {gameOver && !showModal && <NewGameButton onClick={this.newGame} />}
+        {gameOver && !showGameOverModal && (
+          <NewGameButton onClick={this.newGame} />
+        )}
         <GameEndModal
           playerWon={playerWon}
-          show={showModal}
-          onHide={this.closeModal}
+          show={showGameOverModal}
+          onHide={this.closeGameOverModal}
           onNewGame={this.newGame}
           activeRow={activeRow}
         />
+        <RulesModal show={showRulesModal} onHide={this.closeRulesModal} />
       </div>
     )
   }
@@ -153,6 +176,7 @@ function generateNewGameState() {
     activeRow: 9,
     gameOver: false,
     playerWon: false,
-    showModal: false,
+    showGameOverModal: false,
+    showRulesModal: false,
   }
 }
