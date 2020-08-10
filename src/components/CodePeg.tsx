@@ -6,6 +6,7 @@ interface Props {
   color: string
   clickable?: boolean
   onClick?: () => void
+  active?: boolean
 }
 
 export default function CodePeg(props: Props) {

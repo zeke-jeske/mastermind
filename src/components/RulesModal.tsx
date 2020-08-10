@@ -40,10 +40,10 @@ export default function RulesModal({ show, onHide }: Props) {
           </li>
         </ol>
         <p>
-          Your goal is to guess the secret code. To begin, click one of the pegs
-          in the bottom row to choose a color and do the same for the rest of
-          the bottom row. When you're happy with your guess, click the "Check"
-          button.
+          Your goal is to guess the secret code. To begin, choose four colors in
+          the bottom row and click the "Check" button. To select colors, you can
+          use the arrow keys, the space bar, or the letter keys (R, O, Y, G, B,
+          and P), or you can just click on the pegs.
         </p>
         <p>The computer will score your guess in the following way:</p>
         <ul>

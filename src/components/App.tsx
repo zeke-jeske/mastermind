@@ -16,6 +16,7 @@ interface State {
   }>
   code: string[]
   activeRow: number
+  activePeg: number
   gameOver: boolean
   playerWon: boolean
   showGameOverModal: boolean
@@ -23,71 +24,86 @@ interface State {
 }
 
 export default class App extends React.Component<{}, State> {
+  boardRef: React.RefObject<HTMLDivElement>
+
   constructor(props: {}) {
     super(props)
 
     this.state = generateNewGameState()
+    this.boardRef = React.createRef()
   }
 
-  switchPegColor = (rowNum: number, pegNum: number) => {
-    this.setState(state => {
-      // must copy each layer separately so as not to mutate state
-      let rows = [...state.rows]
-      let guess = [...rows[rowNum].guess]
+  componentDidMount() {
+    this.focusBoard()
+  }
 
-      guess[pegNum] =
-        codePegColors[(codePegColors.indexOf(guess[pegNum]) + 1) % 6]
+  switchPegColor = (reverse: boolean = false) => {
+    this.setState(({ activeRow, activePeg, rows }) => {
+      const newState: any = {}
+      const guess = [...rows[activeRow].guess]
+      const oldColor = codePegColors.indexOf(guess[activePeg])
+      let newColor
 
-      rows[rowNum] = { ...rows[rowNum], guess }
+      if (reverse) {
+        if (oldColor === -1) newColor = 5
+        else newColor = oldColor + 5
+      } else newColor = oldColor + 1
 
-      return { rows }
+      guess[activePeg] = codePegColors[newColor % 6]
+      newState.rows = [...rows]
+      newState.rows[activeRow] = { ...rows[activeRow], guess }
+
+      return newState
     })
   }
 
   check = () => {
     this.setState(({ activeRow, rows, code }) => {
-      const newState: any = {}
+      const state: any = {}
       const guess = [...rows[activeRow].guess]
-      const c = [...code] // copy code so that it is not modified
-      let response: string[] = []
 
-      guess.forEach((color, pegNum) => {
-        // correct color and correct position
-        if (color === c[pegNum]) {
-          // make sure it's not counted twice
-          guess[pegNum] = ''
-          c[pegNum] = ''
-          response.push(keyPegColors[0])
-        }
-      })
+      if (!guess.includes('empty')) {
+        const c = [...code] // copy code so that it is not modified
+        let response: string[] = []
 
-      // if the player won
-      if (response.length === 4) this.endGame(true)
-      else {
         guess.forEach((color, pegNum) => {
-          // correct color, wrong place
-          if (color && c.includes(color)) {
-            c[c.indexOf(color)] = ''
-            response.push(keyPegColors[1])
+          // correct color and correct position
+          if (color === c[pegNum]) {
+            // make sure it's not counted twice
+            guess[pegNum] = ''
+            c[pegNum] = ''
+            response.push(keyPegColors[0])
           }
         })
 
-        // pad array to length 4
-        response = response.concat(Array(4 - response.length).fill('empty'))
+        // if the player won
+        if (response.length === 4) this.endGame(true)
+        else {
+          guess.forEach((color, pegNum) => {
+            // correct color, wrong place
+            if (color && c.includes(color)) {
+              c[c.indexOf(color)] = ''
+              response.push(keyPegColors[1])
+            }
+          })
 
-        if (!activeRow) this.endGame(false)
-        else newState.activeRow = activeRow - 1
+          // pad array to length 4
+          response = response.concat(Array(4 - response.length).fill('empty'))
+
+          if (!activeRow) this.endGame(false)
+          else state.activeRow = activeRow - 1
+        }
+
+        state.rows = [...rows]
+        state.rows[activeRow] = {
+          ...rows[activeRow],
+          response,
+        }
       }
 
-      newState.rows = [...rows]
-
-      newState.rows[activeRow] = {
-        ...rows[activeRow],
-        response,
-      }
-
-      return newState
+      return state
     })
+    this.focusBoard()
   }
 
   endGame = (playerWon: boolean) => {
@@ -107,14 +123,58 @@ export default class App extends React.Component<{}, State> {
       showGameOverModal: false,
       activeRow: -1, // Make sure none of the pegs are still clickable
     })
+    this.focusBoard()
   }
 
   closeRulesModal = () => {
     this.setState({ showRulesModal: false })
+    this.focusBoard()
+  }
+
+  focusBoard = () => {
+    this.boardRef.current && this.boardRef.current.focus()
   }
 
   showRulesModal = () => {
     this.setState({ showRulesModal: true })
+  }
+
+  handleKeyDown = (key: string) => {
+    if (key === 'Enter') this.check()
+    else if (key === ' ' || key === 'ArrowDown') this.switchPegColor()
+    else if (key === 'ArrowUp') this.switchPegColor(true)
+    else if (key === 'ArrowRight')
+      this.setState(state => ({
+        activePeg: (state.activePeg + 1) % 4,
+      }))
+    else if (key === 'ArrowLeft')
+      this.setState(state => ({
+        activePeg: (state.activePeg + 3) % 4,
+      }))
+    else {
+      for (let i = 0; i < 6; i++) {
+        const color = codePegColors[i]
+
+        if (color.charAt(0) === key) {
+          this.setState(state => {
+            const activeRow = state.activeRow
+            let rows = [...state.rows]
+            let guess = [...rows[activeRow].guess]
+
+            guess[state.activePeg] = color
+
+            rows[activeRow] = { ...rows[activeRow], guess }
+            return { rows }
+          })
+          break
+        }
+      }
+    }
+  }
+
+  handlePegClick = (pegNum: number) => {
+    this.setState({ activePeg: pegNum })
+    this.switchPegColor()
   }
 
   render = () => {
@@ -123,6 +183,7 @@ export default class App extends React.Component<{}, State> {
       code,
       gameOver,
       activeRow,
+      activePeg,
       showGameOverModal,
       showRulesModal,
       playerWon,
@@ -138,7 +199,10 @@ export default class App extends React.Component<{}, State> {
           code={code}
           codeHidden={!gameOver}
           activeRow={activeRow}
-          onPegClick={this.switchPegColor}
+          activePeg={activePeg}
+          onKeyDown={this.handleKeyDown}
+          onPegClick={this.handlePegClick}
+          boardRef={this.boardRef}
         />
         {!gameOver && <RulesButton onClick={this.showRulesModal} />}
         {!gameOver && (
@@ -170,10 +234,9 @@ function generateNewGameState() {
       })),
     code: Array(4)
       .fill('')
-      .map(
-        () => codePegColors[Math.floor(Math.random() * codePegColors.length)],
-      ),
+      .map(() => codePegColors[Math.floor(Math.random() * 6)]),
     activeRow: 9,
+    activePeg: 0,
     gameOver: false,
     playerWon: false,
     showGameOverModal: false,

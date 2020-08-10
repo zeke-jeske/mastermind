@@ -7,25 +7,33 @@ interface Props {
   guess: string[]
   response: string[]
   active: boolean
+  activePeg: number
   onPegClick: (pegNum: number) => void
 }
 
-export default function Row(props: Props) {
+export default function Row({
+  guess,
+  active,
+  activePeg,
+  onPegClick,
+  response,
+}: Props) {
   return (
     <div className={styles.row}>
       <div className={styles.codePegsContainer}>
-        {props.guess.map((color: string, pegNum: number) => (
+        {guess.map((color: string, pegNum: number) => (
           <CodePeg
             color={color}
             key={pegNum}
-            clickable={props.active}
-            onClick={() => props.onPegClick(pegNum)}
+            clickable={active}
+            onClick={() => onPegClick(pegNum)}
             hidden={false}
+            active={active && pegNum === activePeg}
           />
         ))}
       </div>
       <div className={styles.keyPegsContainer}>
-        {props.response.map((color: string, key: number) => (
+        {response.map((color: string, key: number) => (
           <KeyPeg color={color} key={key} hidden={false} />
         ))}
       </div>
