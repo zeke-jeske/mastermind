@@ -1,7 +1,7 @@
 {
   "name": "mastermind",
   "version": "0.1.0",
-  "description": "A Node React app to play Mastermind in the browser",
+  "description": "A Node and React app to play Mastermind in the browser.",
   "license": "MIT",
   "keywords": [
     "games",
