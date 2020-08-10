@@ -2,7 +2,19 @@
   "name": "mastermind",
   "version": "0.1.0",
   "description": "A Node React app to play Mastermind in the browser",
-  "private": true,
+  "license": "MIT",
+  "keywords": [
+    "games",
+    "react",
+    "mastermind",
+    "typescript",
+    "sass",
+    "javascript",
+    "create-react-app"
+  ],
+  "homepage": "zekes-mastermind-game.heroku.com",
+  "author": "Zeke Jeske <zeke.jeske@gmail.com> (zeke-jeske.github.io)",
+  "main": "server.js",
   "dependencies": {
     "@testing-library/dom": "^7.21.7",
     "@testing-library/jest-dom": "^4.2.4",
