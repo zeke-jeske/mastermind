@@ -12,7 +12,6 @@
     "javascript",
     "create-react-app"
   ],
-  "homepage": "zekes-mastermind-game.heroku.com",
   "author": "Zeke Jeske <zeke.jeske@gmail.com> (zeke-jeske.github.io)",
   "main": "server.js",
   "dependencies": {
