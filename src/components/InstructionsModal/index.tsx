@@ -79,9 +79,8 @@ export default function InstructionsModal({ show, onHide }: Props) {
             <span className={styles.key}>y</span>/
             <span className={styles.key}>g</span>/
             <span className={styles.key}>b</span>/
-            <span className={styles.key}>p</span>: Change the color of the
-            current peg (<span className={styles.key}>r</span> corresponds to
-            red, <span className={styles.key}>o</span> to orange, etc.)
+            <span className={styles.key}>p</span>: Set the color of the current
+            peg
           </li>
           <li className='mb-2'>
             <span className={styles.key}>&#9650;</span>/

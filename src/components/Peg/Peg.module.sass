@@ -15,9 +15,6 @@
   &:not(:disabled)
     cursor: pointer
 
-  &.active
-    box-shadow: 0 0 0 1px white
-
   &.empty
     border: 1px solid #fff
     background: transparent
@@ -46,3 +43,6 @@
   .questionMark
     margin: 0
     line-height: 1
+
+:focus .peg.active
+  box-shadow: 0 0 0 1px white

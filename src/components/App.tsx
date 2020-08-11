@@ -139,18 +139,19 @@ export default class App extends React.Component<{}, State> {
     this.setState({ showInstructionsModal: true })
   }
 
+  moveToNextPeg = (reverse: boolean = false) => {
+    this.setState(state => ({
+      activePeg: (state.activePeg + (reverse ? 3 : 1)) % 4,
+    }))
+  }
+
   handleKeyDown = (key: string) => {
     if (key === 'Enter') this.check()
-    else if (key === ' ' || key === 'ArrowDown') this.switchPegColor()
+    else if (key === 'ArrowDown') this.switchPegColor()
     else if (key === 'ArrowUp') this.switchPegColor(true)
-    else if (key === 'ArrowRight')
-      this.setState(state => ({
-        activePeg: (state.activePeg + 1) % 4,
-      }))
-    else if (key === 'ArrowLeft')
-      this.setState(state => ({
-        activePeg: (state.activePeg + 3) % 4,
-      }))
+    else if (key === 'ArrowRight' || key === ' ') this.moveToNextPeg()
+    else if (key === 'ArrowLeft' || key === 'Backspace')
+      this.moveToNextPeg(true)
     else {
       for (let i = 0; i < 6; i++) {
         const color = codePegColors[i]
@@ -166,6 +167,8 @@ export default class App extends React.Component<{}, State> {
             rows[activeRow] = { ...rows[activeRow], guess }
             return { rows }
           })
+
+          this.moveToNextPeg()
           break
         }
       }
