@@ -3,8 +3,8 @@ import Board from 'components/Board'
 import GameEndModal from 'components/GameEndModal'
 import CheckButton from 'components/CheckButton'
 import NewGameButton from 'components/NewGameButton'
-import RulesButton from 'components/RulesButton'
-import RulesModal from 'components/RulesModal'
+import InstructionsButton from 'components/InstructionsButton'
+import InstructionsModal from 'components/InstructionsModal'
 
 const codePegColors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple']
 const keyPegColors = ['red', 'white']
@@ -20,7 +20,7 @@ interface State {
   gameOver: boolean
   playerWon: boolean
   showGameOverModal: boolean
-  showRulesModal: boolean
+  showInstructionsModal: boolean
 }
 
 export default class App extends React.Component<{}, State> {
@@ -126,8 +126,8 @@ export default class App extends React.Component<{}, State> {
     this.focusBoard()
   }
 
-  closeRulesModal = () => {
-    this.setState({ showRulesModal: false })
+  closeInstructionsModal = () => {
+    this.setState({ showInstructionsModal: false })
     this.focusBoard()
   }
 
@@ -135,8 +135,8 @@ export default class App extends React.Component<{}, State> {
     this.boardRef.current && this.boardRef.current.focus()
   }
 
-  showRulesModal = () => {
-    this.setState({ showRulesModal: true })
+  showInstructionsModal = () => {
+    this.setState({ showInstructionsModal: true })
   }
 
   handleKeyDown = (key: string) => {
@@ -185,7 +185,7 @@ export default class App extends React.Component<{}, State> {
       activeRow,
       activePeg,
       showGameOverModal,
-      showRulesModal,
+      showInstructionsModal,
       playerWon,
     } = this.state
 
@@ -204,7 +204,9 @@ export default class App extends React.Component<{}, State> {
           onPegClick={this.handlePegClick}
           boardRef={this.boardRef}
         />
-        {!gameOver && <RulesButton onClick={this.showRulesModal} />}
+        {!gameOver && (
+          <InstructionsButton onClick={this.showInstructionsModal} />
+        )}
         {!gameOver && (
           <CheckButton {...{ onClick: this.check, activeRow, rows }} />
         )}
@@ -218,7 +220,10 @@ export default class App extends React.Component<{}, State> {
           onNewGame={this.newGame}
           activeRow={activeRow}
         />
-        <RulesModal show={showRulesModal} onHide={this.closeRulesModal} />
+        <InstructionsModal
+          show={showInstructionsModal}
+          onHide={this.closeInstructionsModal}
+        />
       </div>
     )
   }
@@ -240,6 +245,6 @@ function generateNewGameState() {
     gameOver: false,
     playerWon: false,
     showGameOverModal: false,
-    showRulesModal: false,
+    showInstructionsModal: false,
   }
 }

@@ -34,7 +34,7 @@ export default function Row({
       </div>
       <div className={styles.keyPegsContainer}>
         {response.map((color: string, key: number) => (
-          <KeyPeg color={color} key={key} hidden={false} />
+          <KeyPeg color={color} key={key} />
         ))}
       </div>
     </div>

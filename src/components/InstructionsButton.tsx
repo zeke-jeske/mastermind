@@ -1,7 +1,11 @@
 import React from 'react'
 import Button from 'react-bootstrap/Button'
 
-export default function RulesButton({ onClick }: { onClick: () => void }) {
+export default function InstructionsButton({
+  onClick,
+}: {
+  onClick: () => void
+}) {
   return (
     <Button
       variant='info'
@@ -13,7 +17,7 @@ export default function RulesButton({ onClick }: { onClick: () => void }) {
       }}
       onClick={onClick}
     >
-      Rules
+      Instructions
     </Button>
   )
 }
