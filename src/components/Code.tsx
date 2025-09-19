@@ -21,12 +21,11 @@ export default function Code({ code, hidden }: Props) {
       {code.map((color: string, key: number) => {
         const pegProps = {
           color,
-          key,
           hidden,
           clickable: false,
           onClick: emptyFunction,
         }
-        return <CodePeg {...pegProps} />
+        return <CodePeg key={key} {...pegProps} />
       })}
     </div>
   )

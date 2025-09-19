@@ -16,10 +16,10 @@ interface Props {
   codeHidden: boolean
   onPegClick: (pegNum: number) => void
   onKeyDown: (key: string) => void
-  boardRef: React.RefObject<HTMLDivElement>
+  boardRef: React.RefObject<HTMLDivElement | null>
 }
 
-export default class Board extends React.Component<Props, {}> {
+export default class Board extends React.Component<Props> {
   handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
     this.props.onKeyDown(event.key)
   }

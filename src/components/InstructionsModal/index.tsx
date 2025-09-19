@@ -49,12 +49,12 @@ export default function InstructionsModal({ show, onHide }: Props) {
           To begin, choose four colors in the bottom row (see{' '}
           <strong>Controls</strong>) and click the Check button. After the
           computer checks your first guess (see <strong>Scoring</strong>), you
-          can make another guess in the second row and click "Check" again. Try
-          to figure out the code in as few guesses as possible.
+          can make another guess in the second row and click &quot;Check&quot;
+          again. Try to figure out the code in as few guesses as possible.
         </p>
         <h5>Scoring</h5>
         <p>
-          Each time you make a guess and click the Check button, he computer
+          Each time you make a guess and click the Check button, the computer
           will score your guess in the following way:
         </p>
         <ul>

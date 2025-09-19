@@ -23,10 +23,10 @@ interface State {
   showInstructionsModal: boolean
 }
 
-export default class App extends React.Component<{}, State> {
-  boardRef: React.RefObject<HTMLDivElement>
+export default class App extends React.Component<Record<string, never>, State> {
+  boardRef: React.RefObject<HTMLDivElement | null>
 
-  constructor(props: {}) {
+  constructor(props: Record<string, never>) {
     super(props)
 
     this.state = generateNewGameState()
@@ -38,8 +38,9 @@ export default class App extends React.Component<{}, State> {
   }
 
   switchPegColor = (reverse: boolean = false) => {
-    this.setState(({ activeRow, activePeg, rows }) => {
-      const newState: any = {}
+    this.setState((oldState) => {
+      const { activeRow, activePeg, rows } = oldState
+      const newState: State = { ...oldState }
       const guess = [...rows[activeRow].guess]
       const oldColor = codePegColors.indexOf(guess[activePeg])
       let newColor
@@ -58,8 +59,9 @@ export default class App extends React.Component<{}, State> {
   }
 
   check = () => {
-    this.setState(({ activeRow, rows, code }) => {
-      const state: any = {}
+    this.setState((oldState) => {
+      const { rows, activeRow, code } = oldState
+      const state = { ...oldState }
       const guess = [...rows[activeRow].guess]
 
       if (!guess.includes('empty')) {
@@ -79,7 +81,7 @@ export default class App extends React.Component<{}, State> {
         // if the player won
         if (response.length === 4) this.endGame(true)
         else {
-          guess.forEach((color, pegNum) => {
+          guess.forEach((color) => {
             // correct color, wrong place
             if (color && c.includes(color)) {
               c[c.indexOf(color)] = ''
@@ -140,7 +142,7 @@ export default class App extends React.Component<{}, State> {
   }
 
   moveToNextPeg = (reverse: boolean = false) => {
-    this.setState(state => ({
+    this.setState((state) => ({
       activePeg: (state.activePeg + (reverse ? 3 : 1)) % 4,
     }))
   }
@@ -157,10 +159,10 @@ export default class App extends React.Component<{}, State> {
         const color = codePegColors[i]
 
         if (color.charAt(0) === key) {
-          this.setState(state => {
+          this.setState((state) => {
             const activeRow = state.activeRow
-            let rows = [...state.rows]
-            let guess = [...rows[activeRow].guess]
+            const rows = [...state.rows]
+            const guess = [...rows[activeRow].guess]
 
             guess[state.activePeg] = color
 

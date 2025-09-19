@@ -12,7 +12,7 @@ interface Props {
   onClick?: () => void
 }
 
-export default class Peg extends React.Component<Props, {}> {
+export default class Peg extends React.Component<Props> {
   render() {
     const {
       color,
@@ -30,7 +30,7 @@ export default class Peg extends React.Component<Props, {}> {
           hidden ? styles.empty : styles[color],
           active && styles.active,
         ]
-          .filter(a => a)
+          .filter((a) => a)
           .join(' ')}
         style={{
           height: size + 'rem',
